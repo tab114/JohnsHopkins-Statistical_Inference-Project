@@ -1,11 +1,6 @@
----
-title: "Statistical Inference - Project Part I"
-author: "Lefteris Nikolidakis"
-date: "September 21, 2014"
-output:
-  html_document:
-    keep_md: yes
----
+# Statistical Inference - Project Part I
+Lefteris Nikolidakis  
+September 21, 2014  
 
 ### Simulation of Exponential Distribution:
 *The exponential distribution can be simulated in R with rexp(n, lambda) where lambda is the rate parameter. The mean of exponential distribution*  
@@ -21,7 +16,8 @@ ________________________________________________________________________________
 
 </br>
 First I will generate 1000 simulations of 40 exponential values with rate = 0.2 and I will calculate the expected and observed summary statistics (mean, median, sd, SE):
-```{r}
+
+```r
 lambda = 0.2
 n = 40 # the size of the sample 
 noSim = 1000 # the number of simulations
@@ -39,13 +35,14 @@ meanSim <- mean(means) # observed mean of the simulated exponential means
 mediaSim <- mean(means) # observed median of the simulated exponential means 
 ```
 
-With lambda = 0.2 the expected Mean from any exponential distribution is 1/lambda = `r meanExp`, the expected standard deviation is 1/lambda = `r sdExp` and the expected stadard deviation of the Mean (standard error) is  5/sqrt(40) = `r se`.  
-Regarding our simulated data, the Mean of the means is `r  meanSim` and the Standard Error is `r seSim`, which are quite close to the expected values. In addition, the Median = `r mediaSim` is quite close to the expected value as well which supports non-skewed data.  
+With lambda = 0.2 the expected Mean from any exponential distribution is 1/lambda = 5, the expected standard deviation is 1/lambda = 5 and the expected stadard deviation of the Mean (standard error) is  5/sqrt(40) = 0.7906.  
+Regarding our simulated data, the Mean of the means is 5.0451 and the Standard Error is 0.8088, which are quite close to the expected values. In addition, the Median = 5.0451 is quite close to the expected value as well which supports non-skewed data.  
 
 
 The following plot displays a histogram of the simulated exponential data, with an overlay of a vertical line which corresponds to the theoretical mean and an overlay of an adjusted normal curve with mean equal to the expected mean of the exp(0.2) and sd equal to the expected standard error of the exp(0.2).
 
-```{r}
+
+```r
 library(ggplot2)
 dat2 = data.frame(means)
 g <- ggplot(dat2, aes(x=means)) + geom_histogram(alpha = .20, binwidth=0.2, colour = "black")
@@ -64,13 +61,16 @@ g <- g + geom_vline(xintercept = meanExp, size = 1)
 g + geom_point(data = xy, aes(x = x, y = y, colour = 'Normal')) 
 ```
 
+![plot of chunk unnamed-chunk-2](./Project_Part_1_files/figure-html/unnamed-chunk-2.png) 
+
 The Histogram shows that the distribution of the simulated samples mean is approximately Normal.  
 
 <br>
 Now I will calculate a 95% Confidence Interval for the mean (1/lambda) of any simulated exponential distribution with n=40 values:
-```{r}
+
+```r
 CI <- meanExp +c(-1,1) * 1.96 * se/sqrt(n)
 ```
-The evaluated CI is [`r CI`] which implies that from all the simulations of 40 exponential values with lambda = 0.2, around 95% of them would contain a sample mean equal to the Expected (theoretical).
+The evaluated CI is [4.755, 5.245] which implies that from all the simulations of 40 exponential values with lambda = 0.2, around 95% of them would contain a sample mean equal to the Expected (theoretical).
 
 
