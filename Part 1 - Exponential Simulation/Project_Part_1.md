@@ -32,11 +32,11 @@ values <- matrix(rexp(noSim * n, rate=0.2), nrow = noSim) # matrix of 40(values)
 means <- apply(values, MARGIN = 1, mean) # means of each simulation
 seSim <- sd(means)  # standard error of the simulations - observed sd of the simulated means
 meanSim <- mean(means) # observed mean of the simulated exponential means
-mediaSim <- mean(means) # observed median of the simulated exponential means 
+mediaSim <- median(means) # observed median of the simulated exponential means 
 ```
 
 With lambda = 0.2 the expected Mean from any exponential distribution is 1/lambda = 5, the expected standard deviation is 1/lambda = 5 and the expected stadard deviation of the Mean (standard error) is  5/sqrt(40) = 0.7906.  
-Regarding our simulated data, the Mean of the means is 5.0451 and the Standard Error is 0.8088, which are quite close to the expected values. In addition, the Median = 5.0451 is quite close to the expected value as well which supports non-skewed data.  
+Regarding our simulated data, the Mean of the means is 5.0451 and the Standard Error is 0.8088, which are quite close to the expected values. In addition, the Median = 5.0175 is quite close to the expected value as well which supports non-skewed data.  
 
 
 The following plot displays a histogram of the simulated exponential data, with an overlay of a vertical line which corresponds to the theoretical mean and an overlay of an adjusted normal curve with mean equal to the expected mean of the exp(0.2) and sd equal to the expected standard error of the exp(0.2).
@@ -45,7 +45,7 @@ The following plot displays a histogram of the simulated exponential data, with 
 ```r
 library(ggplot2)
 dat2 = data.frame(means)
-g <- ggplot(dat2, aes(x=means)) + geom_histogram(alpha = .20, binwidth=0.2, colour = "black")
+g <- ggplot(dat2, aes(x=means)) + geom_histogram(alpha = .20, binwidth=0.15, colour = "black", fill = "dark blue")
 g <- g + xlab("Sample Means") + ylab("Frequency") + ggtitle("Distribution of Sample Means")
 g <- g + geom_vline(xintercept = meanExp, size = 1)
   
@@ -54,7 +54,7 @@ g <- g + geom_vline(xintercept = meanExp, size = 1)
   x <- seq(meanExp-4*se, meanExp+4*se,length=100)  #length (-4,4) theoretical standard errors from the mean
   #y-axis
   y <- dnorm(x, mean=meanExp, sd = se) # generate 100 normal density values.
-  y = y*noSim*0.2   #adjust the normal values to the Frequencies. 0.2 stands for the binwidth. 
+  y = y*noSim*0.15   #adjust the normal values to the Frequencies. 0.2 stands for the binwidth. 
   xy=data.frame(cbind(x,y))
 
 # Overlay the normal curve in the histogram
@@ -64,6 +64,17 @@ g + geom_point(data = xy, aes(x = x, y = y, colour = 'Normal'))
 ![plot of chunk unnamed-chunk-2](./Project_Part_1_files/figure-html/unnamed-chunk-2.png) 
 
 The Histogram shows that the distribution of the simulated samples mean is approximately Normal.  
+
+To confirm that the distribution is approximately normal I created QQ-Plot, overlayed with the theoretical normal line.
+
+```r
+ggplot(dat2, aes(sample = means)) + stat_qq() + geom_abline(aes(intercept = mean(means), slope=1))
+```
+
+![plot of chunk unnamed-chunk-3](./Project_Part_1_files/figure-html/unnamed-chunk-3.png) 
+
+We notice in the QQ plot that the slope of the distribution of the data is a bit smaller than the theoretical's normal slope. Specifically more sample means are centered around the theoretical mean than in the normal destribution.
+
 
 <br>
 Now I will calculate a 95% Confidence Interval for the mean (1/lambda) of any simulated exponential distribution with n=40 values:
